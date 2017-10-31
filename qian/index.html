@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        *{
+            padding:0;
+            margin:0;
+        }
+        p span:nth-child(1){
+            margin-right:40px;
+        }
+        p b{
+            margin-right: 40px;
+        }
+        i{
+            position: fixed;
+            bottom: 30px;
+            left:20px;
+        }
+        i:hover{
+            cursor: pointer;
+        }
+    </style>
+    <script src="jquery-1.11.3.js"></script>
+    <script>
+        $(function () {
+            $.ajax({
+                url:'http://localhost:3000/js/list',
+                type:'GET',
+                data:{
+
+                },
+                success:function (data) {
+                    for(var i in data){
+                        $('body').append('<p><span>'+data[i].title+'</span><b>'+data[i].time+'</b><button id="'+data[i].id+'">X</button></p>')
+                    }
+                }
+            })
+            $(document).on('click','button',function () {
+                var a=$(this).attr('id')
+                var _this=$(this).parent()
+                console.log(_this)
+                $.ajax({
+                    url:'http://localhost:3000/js/delete',
+                    type:'POST',
+                    data:{
+                        id:a
+                    },
+                    success:function (data) {
+                        _this.remove()
+                    }
+                })
+            })
+            $(document).on('click','i',function () {
+                $.ajax({
+                    url:'http://localhost:3000/js/add',
+                    type:'POST',
+                    data:{
+                        a:'news',
+                        b:'2013-10-31'
+                    },
+                    success:function (data) {
+                        $.ajax({
+                            url:'http://localhost:3000/js/list',
+                            type:'GET',
+                            data:{
+
+                            },
+                            success:function (data) {
+                                $('body').html('<i>增加</i>')
+                                for(var i in data){
+                                    $('body').append('<p><span>'+data[i].title+'</span><b>'+data[i].time+'</b><button id="'+data[i].id+'">X</button></p>')
+                                }
+                            }
+                        })
+                    }
+                })
+            })
+        })
+    </script>
+</head>
+<body>
+<i>增加</i>
+</body>
+</html>
